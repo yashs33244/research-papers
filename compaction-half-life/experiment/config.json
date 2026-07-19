@@ -1,0 +1,36 @@
+{
+  "experiment": "compaction-half-life",
+  "date": "2026-07-19",
+  "model_under_test": "haiku (claude CLI headless, --output-format json)",
+  "rounds_per_chain": 5,
+  "facts_per_chain": 16,
+  "chains_per_arm": 6,
+  "arms": {
+    "A": "150-word budget, plain compaction instruction",
+    "B": "400-word budget, plain compaction instruction",
+    "C": "150-word budget + 'Preserve all identifiers, codes, numbers, and proper nouns verbatim.'"
+  },
+  "seeds": {
+    "pilot_base_seed": 90000,
+    "main_base_seed": 42000,
+    "note": "content seed = base_seed + chain_idx; same chain_idx shares facts/filler across arms"
+  },
+  "call_budget": {
+    "pilot": 5,
+    "main": 90,
+    "validation_probes": 6,
+    "spot_repeat": 10,
+    "planned_total": 111,
+    "cap": 120
+  },
+  "preregistered_rules": {
+    "scoring": "case-insensitive substring match of each 8-char code in each round's summary; whitespace normalized. Corruption (integrity loss) scored separately: any token matching [A-Z0-9]{6,10} in the summary with Levenshtein distance 1-2 from a planted code that is not itself present verbatim.",
+    "calibration_gate": "pilot (Arm A) round-1 retention must lie in [0.15, 0.95]; outside that range, adjust fact count or filler length once and re-pilot before spending the main budget",
+    "geometric_fit": "fit log S(r) = r * log s by least squares through the origin on arm-level chain-mean survival, rounds 1-5; half-life = ln(2)/(-ln(s))",
+    "shape_decision_rule": "compute conditional per-round survival c_r = S(r)/S(r-1) on chain means; delta = c_1 - mean(c_2..c_5); decay is called FRONT-LOADED if the 95 percent bootstrap CI of delta (resampling chains, 10000 reps) excludes 0 and delta < 0; otherwise consistent with geometric",
+    "arm_comparison": "H2/H3 assessed by the 95 percent bootstrap CI (resampling chains, 10000 reps) of the difference in round-5 survival and in fitted s between arms; a difference is claimed only if the CI excludes 0",
+    "cost_latency": "reported only from total_cost_usd and duration_api_ms fields of retained raw JSON, never estimated",
+    "probes": "for each Arm A chain, 1 call with 3 questions (mix of substring-retained and substring-lost codes) answered from the round-5 summary only; retained-code agreement = exact match; lost codes classified UNKNOWN (abstain) vs any other code-like answer (confabulation)"
+  },
+  "fixed_before_main_run": true
+}

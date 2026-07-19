@@ -1,0 +1,13 @@
+Given ONLY this summary of earlier work, answer the questions. Each answer is a short code. If the information is not in the summary, answer exactly UNKNOWN. Reply with exactly 3 lines in the form '1: <answer>'.
+
+--- SUMMARY ---
+**Corpus:** 15 microservices (cache-warmer, search-indexer, session-manager, user-profile-service, metrics-collector, auth-service, audit-logger, scheduler-core, payment-gateway, notification-daemon, webhook-relay, export-pipeline, billing-worker, ingest-api, report-builder) across 6 environments (dev, QA, green/blue, canary, staging, prod).
+
+**Operations log:** 50+ operations documented spanning 09:15–16:20 today, including scaling, upgrades, migrations, health checks, patches, downgrades, drains, pauses, resumes, rollbacks, reconfigurations, redeployments, restarts. Each entry records timestamp, service, environment, operation type, and outcome (success/failure, performance metrics, alerts, retries, customer impact, memory/CPU/queue status, Grafana observations).
+
+**Status:** All operations logged with detailed outcomes. No explicit analysis objective stated. Awaiting clarification on what querying, analysis, or reporting is needed to proceed.
+
+--- QUESTIONS ---
+1) What is the license activation code?
+2) What is the TLS certificate serial fragment?
+3) What is the build artifact hash prefix?

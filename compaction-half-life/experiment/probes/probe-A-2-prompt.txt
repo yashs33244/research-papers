@@ -1,0 +1,19 @@
+Given ONLY this summary of earlier work, answer the questions. Each answer is a short code. If the information is not in the summary, answer exactly UNKNOWN. Reply with exactly 3 lines in the form '1: <answer>'.
+
+--- SUMMARY ---
+**Operational Summary (2026-07-19)**
+
+16 services across production, staging, QA, canary, blue/green, dev. 30+ operations performed: scaling, restarts, patches, upgrades, drains, health-checks, reconfigurations, migrations, rollbacks, resumptions, pauses.
+
+Services: auth-service, search-indexer, session-manager, billing-worker, metrics-collector, ingest-api, report-builder, notification-daemon, payment-gateway, scheduler-core, cache-warmer, webhook-relay, audit-logger, export-pipeline, user-profile-service.
+
+Outcomes: Most completed successfully. Several required manual retries or extended duration. Warnings emitted in some operations. All environments now healthy. Alerts cleared, pager quiet. No customer impact observed.
+
+Metrics: CPU utilization, memory pressure, queue depths, error rates returned to baseline. Retry queues drained to zero.
+
+Follow-up: Config-tidying tasks filed for multiple operations. Threshold review scheduled next week.
+
+--- QUESTIONS ---
+1) What is the incident tracking number?
+2) What is the container registry token?
+3) What is the SSH deploy key label?

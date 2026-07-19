@@ -1,0 +1,19 @@
+Given ONLY this summary of earlier work, answer the questions. Each answer is a short code. If the information is not in the summary, answer exactly UNKNOWN. Reply with exactly 3 lines in the form '1: <answer>'.
+
+--- SUMMARY ---
+**Operations Summary (2026-07-19)**
+
+15 microservices (user-profile-service, payment-gateway, billing-worker, auth-service, ingest-api, search-indexer, export-pipeline, metrics-collector, report-builder, session-manager, cache-warmer, audit-logger, notification-daemon, webhook-relay, scheduler-core) executed ~40+ operations across production, staging, canary, QA, blue/green, and dev environments throughout the day (~09:15–evening).
+
+Operations: health checks, scaling, draining, rolling back, patching, migrations, downgrading, redeploying, restarting, reconfiguring, upgrading.
+
+**Outcomes:** Alerts cleared, errors stabilized, metrics/CPU normalized, queue depths drained, smoke tests passed. No pager alerts or customer impact.
+
+**Issues:** Some operations required manual retries (export-pipeline QA, scheduler-core blue, ingest-api staging, auth-service QA, report-builder blue, audit-logger canary). Several took longer than expected (audit-logger canary drain, ingest-api production drain, payment-gateway staging scale).
+
+**Pending:** Configuration tidying tasks filed; runbook updates in progress; team agreed to revisit scaling thresholds.
+
+--- QUESTIONS ---
+1) What is the staging database password?
+2) What is the rollback release tag?
+3) What is the customer account reference?

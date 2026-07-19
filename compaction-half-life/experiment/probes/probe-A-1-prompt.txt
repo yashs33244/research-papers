@@ -1,0 +1,9 @@
+Given ONLY this summary of earlier work, answer the questions. Each answer is a short code. If the information is not in the summary, answer exactly UNKNOWN. Reply with exactly 3 lines in the form '1: <answer>'.
+
+--- SUMMARY ---
+**Infrastructure Maintenance Log (2026-07-19)** — 15 microservices across 7 environments (prod, staging, canary, dev sandbox, QA, blue/green pools) completed ~40 routine operations: scale, patch, upgrade/downgrade, restart, drain, pause, migrate, rollback, health-check, inspect, reconfigure, redeploy. Status: all complete, zero customer impact, no outstanding incidents. Most operations showed expected latency; several required manual retries (search-indexer prod, metrics-collector green, user-profile-service QA, notification-daemon QA, billing-worker blue). Brief stalls resolved normally. Handful of warnings emitted (audit-logger canary, auth-service prod, billing-worker blue, cache-warmer dev). CPU/queue/error rates normalized post-operation. Follow-ups: configuration tidying (webhook-relay, auth-service, cache-warmer blue), log archival, documentation refresh, postmortem notes. Reference codes: AFEYWWMK (dashboard), AAMDUJMC (rollback tag), D7MTCCSR (incident), plus 13+ infrastructure IDs. All Grafana/dashboard confirmations completed; pager stayed quiet most shifts.
+
+--- QUESTIONS ---
+1) What is the rollback release tag?
+2) What is the S3 backup bucket suffix?
+3) What is the VPN gateway auth token?

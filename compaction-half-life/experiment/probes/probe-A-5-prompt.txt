@@ -1,0 +1,16 @@
+Given ONLY this summary of earlier work, answer the questions. Each answer is a short code. If the information is not in the summary, answer exactly UNKNOWN. Reply with exactly 3 lines in the form '1: <answer>'.
+
+--- SUMMARY ---
+**No actionable task context.** The activity log contains only repetitive, template-generated operational entries (service name → environment → action → generic result → follow-up) with no variation, decisions, blockers, or real work. This is identical noise to the prior summary.
+
+**To continue work, state:**
+- Actual task (repo name, issue number, or feature)
+- Files/areas involved
+- What decision or action is needed next
+
+Currently: no repo, no issue, no objective. Waiting for real task context.
+
+--- QUESTIONS ---
+1) What is the build artifact hash prefix?
+2) What is the VPN gateway auth token?
+3) What is the TLS certificate serial fragment?

@@ -1,0 +1,200 @@
+[
+ {
+  "chain_id": "A-0",
+  "kind": "lost",
+  "descriptor": "license activation code",
+  "true_code": "NHWWTGAJ",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-0",
+  "kind": "lost",
+  "descriptor": "TLS certificate serial fragment",
+  "true_code": "2H4389QQ",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-0",
+  "kind": "lost",
+  "descriptor": "build artifact hash prefix",
+  "true_code": "CKSQBVDT",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-1",
+  "kind": "retained",
+  "descriptor": "rollback release tag",
+  "true_code": "AAMDUJMC",
+  "mutant_in_summary": "",
+  "answer": "AAMDUJMC",
+  "exact_match": true,
+  "abstained": false,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-1",
+  "kind": "lost",
+  "descriptor": "S3 backup bucket suffix",
+  "true_code": "3EWW8CVW",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-1",
+  "kind": "lost",
+  "descriptor": "VPN gateway auth token",
+  "true_code": "3QNZPJEH",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-2",
+  "kind": "lost",
+  "descriptor": "incident tracking number",
+  "true_code": "C5TXG76Q",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-2",
+  "kind": "lost",
+  "descriptor": "container registry token",
+  "true_code": "5BSM663A",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-2",
+  "kind": "lost",
+  "descriptor": "SSH deploy key label",
+  "true_code": "RC3XZMH6",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-3",
+  "kind": "lost",
+  "descriptor": "production API key suffix",
+  "true_code": "Q7KJPHFB",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-3",
+  "kind": "lost",
+  "descriptor": "incident tracking number",
+  "true_code": "QYRPCFU4",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-3",
+  "kind": "lost",
+  "descriptor": "SSH deploy key label",
+  "true_code": "E8C5GA5T",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-4",
+  "kind": "lost",
+  "descriptor": "staging database password",
+  "true_code": "SFDSZ8ET",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-4",
+  "kind": "lost",
+  "descriptor": "rollback release tag",
+  "true_code": "VHW5F9Q4",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-4",
+  "kind": "lost",
+  "descriptor": "customer account reference",
+  "true_code": "2Z6SNV6T",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-5",
+  "kind": "lost",
+  "descriptor": "build artifact hash prefix",
+  "true_code": "9KDTFM7E",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-5",
+  "kind": "lost",
+  "descriptor": "VPN gateway auth token",
+  "true_code": "QFNSWMY6",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ },
+ {
+  "chain_id": "A-5",
+  "kind": "lost",
+  "descriptor": "TLS certificate serial fragment",
+  "true_code": "VVSYRUBB",
+  "mutant_in_summary": "",
+  "answer": "UNKNOWN",
+  "exact_match": false,
+  "abstained": true,
+  "codelike_wrong": false
+ }
+]
