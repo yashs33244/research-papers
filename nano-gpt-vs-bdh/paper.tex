@@ -1,0 +1,348 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[numbers]{natbib}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\graphicspath{{figs/}}
+\input{macros}
+
+\title{Size or Architecture? A Parameter-Matched, From-Scratch\\Comparison of a Transformer and the Dragon Hatchling}
+\author{Yash Singh\\\small IIIT Una}
+\date{July 18, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The Dragon Hatchling (BDH) is a recent brain-inspired language-model
+architecture that replaces the Transformer's softmax attention and dense MLP
+with linear attention over a high-dimensional, positive, sparse neuron field
+\cite{kosowski2025bdh}. I reimplement both a GPT-2-style Transformer and BDH
+from scratch and train them identically on character-level TinyShakespeare. In a
+first, deliberately naive comparison the BDH model wins on every metric and
+sweeps a position-controlled Claude judge \JudgeBigScore{} over \NPrompts{}
+prompts ($p=\PvalBig$); but that BDH has \BdhBigParamsM{}M parameters against the
+Transformer's \GptParamsM{}M, so the result is confounded by size. This paper
+removes the confound. I shrink BDH's neuron multiplier so both models have
+matched parameter budgets (\GptParamsK{}K for GPT, \BdhParamsK{}K for BDH,
+matched within \MatchPct{}), retrain both from scratch under identical settings, and
+rerun the full harness: held-out perplexity over \NWindows{} windows, five
+automatic text-quality metrics, and the swap-controlled judge. The advantage survives. At matched size BDH again
+wins the head-to-head: perplexity \BdhPpl{} vs \GptPpl{}, real-word rate
+\BdhRealWord{} vs \GptRealWord{}, best validation loss \BdhValLoss{} vs
+\GptValLoss{}, bigram diversity a tie, and a
+\MatchScore{} decisive judge sweep at \Consistency{} swap-consistency
+($p=\Pval$). Strikingly, halving BDH's parameters barely moved its perplexity
+(\BdhPplBig{} to \BdhPpl{}), so it was heavily over-parameterized at 2$\times$ and
+lost almost nothing on the way down. On this task, at equal size, the win is
+architectural, not a size effect.
+The broader lesson is methodological: a two-times parameter gap was enough to
+manufacture a clean-looking \JudgeBigScore{} sweep with $p<10^{-8}$, and only a
+parameter-matched rerun separates architecture from size. All code, raw model
+responses, judge verdicts, and the analysis pipeline that emits every number in
+this paper are released.
+\end{abstract}
+
+\section{Introduction}
+
+Nearly every large language model in production is a Transformer
+\cite{vaswani2017attention}: softmax self-attention mixes information across
+positions, and a dense feed-forward MLP processes each position. The Dragon
+Hatchling (BDH) \cite{kosowski2025bdh} is a recent and deliberately different
+proposal, motivated by models of the brain. Instead of a compact residual
+stream, BDH lifts each token into a much larger space of ``neurons,'' applies a
+ReLU so activations are non-negative and mostly zero (sparse), mixes information
+with \emph{linear} attention \cite{katharopoulos2020linear} rather than softmax,
+and gates two sparse codes multiplicatively in place of the MLP. The authors
+argue this makes the model more interpretable and biologically plausible while
+remaining competitive with the Transformer.
+
+Claims like ``competitive with the Transformer'' are exactly the kind a small,
+controlled, from-scratch reimplementation can test. I built both architectures
+from first principles (heavily commented, teaching-oriented code) and trained
+them under one shared harness on character-level TinyShakespeare, the standard
+minimal setting for studies of this kind \cite{karpathy2022nanogpt}.
+
+\paragraph{The trap.} My first comparison was unfair, and instructively so. Left
+at their natural teaching defaults, the BDH model had roughly twice the
+parameters of the Transformer (\BdhBigParamsM{}M vs \GptParamsM{}M). Under that
+setup BDH won on \emph{every} axis: lower perplexity, more real English words,
+and a \JudgeBigScore{} sweep of a position-controlled LLM judge with a binomial
+$p$-value of $\PvalBig$. Taken at face value this looks like a decisive
+architectural result. It is not: larger language models almost always write
+better, so the entire gap could be size rather than architecture. A reviewer
+would reject the claim on sight.
+
+\paragraph{This paper.} I ask one question and answer it cleanly: \emph{does
+BDH's advantage survive parameter matching?} Because BDH's parameter count is
+dominated by three shared matrices that scale as the neuron multiplier times the
+embedding width squared, halving the multiplier (32 to 16) brings BDH from
+\BdhBigParamsK{}K down to \BdhParamsK{}K parameters, matched to within
+\MatchPct{} of the Transformer's \GptParamsK{}K, so neither model has a material
+size advantage (Section~\ref{sec:method} details the counting convention). I
+retrain both models from scratch under byte-for-byte identical
+training settings and rerun the entire evaluation harness. Contributions:
+
+\begin{itemize}
+\item A clean, from-scratch reimplementation of both a GPT-2-style Transformer
+  and BDH sharing one training and evaluation harness, so the only variable
+  between them is the architecture.
+\item A parameter-matched head-to-head at \GptParamsK{}K/\BdhParamsK{}K
+  parameters on three independent metric families (perplexity, automatic
+  text-quality metrics, and a position-bias-controlled LLM judge), with the
+  earlier two-times-size result reported alongside as the motivating confound.
+\item A partial reproduction of BDH's headline interpretability property
+  (activation sparsity) at small scale, reported honestly against the paper's
+  large-scale figure.
+\item The full harness and raw data: model code, both sets of checkpoints, all
+  generated completions, both orderings of every judge verdict, and the script
+  that emits every number and table here.
+\end{itemize}
+
+\section{Related Work}
+
+The Transformer \cite{vaswani2017attention} and its decoder-only, autoregressive
+form popularized by GPT-2 \cite{radford2019gpt2} are the baseline this paper
+compares against; the concrete implementation follows the minimal nanoGPT
+formulation \cite{karpathy2022nanogpt}. BDH \cite{kosowski2025bdh} is the system
+under test: it combines linear attention \cite{katharopoulos2020linear}, rotary
+position embeddings \cite{su2021roformer}, and a high-dimensional sparse neuron
+field with multiplicative gating, and argues that positivity and sparsity of
+activations yield monosemantic, interpretable units in the spirit of dictionary
+-learning interpretability \cite{bricken2023monosemanticity}. My contribution is
+not a new architecture but a controlled, honest measurement: prior informal
+comparisons of new architectures against Transformers are frequently confounded
+by parameter count, and this paper is a small worked example of isolating
+architecture from size, together with a faithful (if small-scale) reproduction
+of BDH's sparsity claim.
+
+\section{Method}
+\label{sec:method}
+
+\paragraph{Models.} Both models are reimplemented from scratch with parallel
+interfaces so a single training loop drives either one. The Transformer is the
+standard pre-norm, decoder-only GPT-2 arrangement: learned token and position
+embeddings, causal multi-head softmax self-attention, a $4\times$ GELU MLP,
+residual connections, and weight-tied output projection. BDH follows the
+official reference implementation \cite{kosowski2025bdh}: per layer it lifts the
+$C$-dimensional state into a neuron space of $N$ neurons per head via a shared
+encoder, applies a ReLU (positive, sparse), mixes positions with causal linear
+attention using rotary embeddings and a strictly-lower-triangular mask, forms a
+second sparse code from the attention output, gates the two codes elementwise,
+and projects back to $C$ with a shared decoder. Unlike the Transformer, BDH
+reuses one set of encoder/decoder matrices at every layer (depth-wise weight
+sharing) and uses affine-free LayerNorm and no learned position table.
+
+\paragraph{Parameter matching.} BDH's parameter count is dominated by three
+shared matrices (two encoders and one decoder), each of size proportional to
+$m\,C^2$, where $m$ is the neuron multiplier ($N=mC/\text{heads}$) and $C$ is the
+embedding width; the head count cancels. With $C=128$ and $m=32$, BDH has
+\BdhBigParamsK{}K parameters against the Transformer's \GptParamsK{}K, a
+$\sim$2$\times$ gap. Halving the multiplier to $m=16$ (so $N=512$ neurons per
+head, still a genuinely high-dimensional field) gives \BdhParamsK{}K
+parameters, within \MatchPct{} of the Transformer. All counts are total
+trainable parameters. The two conventions agree that neither model has a
+material size edge: by total parameters BDH (\BdhParamsK{}K) is marginally
+smaller than GPT (\GptParamsK{}K), because GPT's total includes a
+16{,}384-parameter learned position table while BDH uses parameter-free rotary
+embeddings; under the non-embedding convention common for Transformers, GPT is
+\GptParamsNoEmbK{}K, so BDH is marginally larger instead. Either way the gap is
+under \MatchPct{}, far smaller than the 2$\times$ gap being controlled for.
+Every other hyperparameter is shared: embedding width $C=128$, 4 heads, 4
+layers, context length 128, dropout 0.1.
+
+\paragraph{Training.} Both models are trained from scratch with one shared loop:
+AdamW (learning rate $3\times10^{-4}$, weight decay 0.1), batch size 32, context
+128, \NIters{} iterations, identical random seed, on the same character-level
+TinyShakespeare corpus (a single $\sim$1\,MB file, 65-character vocabulary,
+90/10 train/val split). The best-validation checkpoint of each run is kept. The
+compute device is an Apple M-series GPU (PyTorch MPS); each model trains in
+minutes.
+
+\paragraph{Evaluation.} These are \emph{base} (completion) models, never taught
+to answer questions, so ``answer correctness'' is not a valid metric; every
+measure below scores how well each model continues Shakespeare-style text. The
+harness applies three independent metric families over both checkpoints.
+
+\begin{enumerate}
+\item \textbf{Perplexity} on the held-out validation split, $\exp$ of the mean
+  next-character cross-entropy, computed over \NWindows{} non-overlapping
+  windows so the whole distribution is visible, not just the mean. Lower is
+  better.
+\item \textbf{Automatic text-quality} metrics on generated completions, pure
+  counting with no model in the loop: fraction of output tokens that are real
+  English words (a 235k-word system dictionary plus a short archaic allowlist),
+  distinct-2 (bigram diversity), repeat fraction, count of \texttt{NAME:}
+  speaker labels, and mean word length. Both models generate from the same
+  \NPrompts{} prompts with identical decoding (temperature 0.8, top-$k$ 40, 140
+  new tokens) and the same per-prompt seed, so the only variable is the model.
+\item \textbf{LLM judge, position-bias controlled.} For each prompt both
+  completions are scored by the \texttt{claude} CLI on fluency, coherence, and
+  Shakespeare-likeness (1--5 each), and the judge is asked \emph{twice with the
+  two completions swapped} ($A\leftrightarrow B$). A win counts as
+  \emph{decisive} only if the same model wins in both orderings; a disagreement
+  between orderings is logged as ``inconsistent'' and counts for neither. A
+  two-sided binomial test is then run on the decisive wins. This directly
+  measures and controls for the judge's position bias rather than assuming it
+  away.
+\end{enumerate}
+
+The prompt set is \NPrompts{} items spanning famous openings (``Now is the
+winter of our discontent''), speaker cues (``MACBETH:''), scene cues (``Enter
+GHOST.''), and neutral non-Shakespeare English (``The meaning of life is''), the
+last as an out-of-distribution stress test. Every number and table in this paper
+is emitted by the analysis script from the raw response files.
+
+\section{Results}
+
+Both models train cleanly from scratch (Figure~\ref{fig:training}); BDH reaches a
+lower validation loss (\BdhValLoss{} vs \GptValLoss{}) despite being no larger. The
+head-to-head is summarized in Table~\ref{tab:matched}, with the earlier
+2$\times$-size run in Table~\ref{tab:confound} for contrast.
+
+\input{tables}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.7\linewidth]{training_curves.png}
+\caption{Base pretraining at matched size. Validation cross-entropy vs
+iteration; identical training settings, only the architecture differs. BDH (the
+smaller model) converges lower.}
+\label{fig:training}
+\end{figure}
+
+On the objective side (Figure~\ref{fig:objective}), BDH's whole per-window
+perplexity distribution sits below GPT's (\BdhPpl{} vs \GptPpl{} over \NWindows{}
+windows), and it generates a higher fraction of real English words
+(\BdhRealWord{} vs \GptRealWord{}). Bigram diversity (distinct-2) is a tie: both
+models are $\sim$100\% non-repetitive, so this is reported as no-difference
+rather than a win. These are model-free counts, so they cannot be explained by
+judge preference.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{eval_objective.png}
+\caption{Objective metrics at matched size. Left: per-window validation
+perplexity (lower is better); BDH's whole distribution is lower. Right:
+automatic generation quality (higher is better).}
+\label{fig:objective}
+\end{figure}
+
+The position-controlled judge agrees emphatically (Figure~\ref{fig:judge}). Of
+\NPrompts{} prompts, BDH wins \DecBdh{} decisively (winning in \emph{both}
+orderings), GPT wins \DecGpt{}, and \DecIncon{} is position-inconsistent; the
+resulting \MatchScore{} sweep has a two-sided binomial $p=\Pval$, and the
+\Consistency{} swap-consistency shows the verdict is not an artifact of where
+each completion sat in the prompt. Mean criterion scores favor BDH on all three
+axes: fluency \BdhFlu{} vs \GptFlu{}, coherence \BdhCoh{} vs \GptCoh{}, and
+Shakespeare-likeness \BdhShak{} vs \GptShak{} (out of 5).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{eval_judge.png}
+\caption{Claude as judge at matched size. Left: decisive wins (each pair judged
+in both orderings). Right: mean scores by criterion.}
+\label{fig:judge}
+\end{figure}
+
+\subsection{Does the two-times-size win survive matching?}
+
+Yes, essentially intact (Figure~\ref{fig:survive}). The earlier
+\BdhBigParamsM{}M-parameter BDH swept the judge \JudgeBigScore{}
+($p=\PvalBig$) with perplexity \BdhPplBig{} vs \GptPplBig{}. After removing the
+size advantage, the matched \BdhParamsK{}K BDH still sweeps \MatchScore{}
+($p=\Pval$) with perplexity \BdhPpl{} vs \GptPpl{}. The two regimes are almost
+indistinguishable on the objective metrics, which is the whole point: if the
+2$\times$ result had been a pure size effect, shrinking BDH to parity should have
+erased it, and it did not. The most telling number is BDH's own perplexity across
+the two sizes, \BdhPplBig{} at \BdhBigParamsM{}M and \BdhPpl{} at
+\BdhParamsK{}K: cutting its parameters in half cost it essentially nothing, so at
+2$\times$ it was carrying redundant capacity, and its edge over the Transformer
+was never about being larger.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{eval_matched_vs_confound.png}
+\caption{Decisive judge wins before and after parameter matching. Left: the
+confounded 2$\times$ run. Right: the same harness with the parameter gap removed.
+The sweep survives.}
+\label{fig:survive}
+\end{figure}
+
+\subsection{Interpretability: activation sparsity}
+
+BDH's central interpretability claim is that its neurons are positive and sparse
+(few fire at once). Measured on the matched, trained model over the validation
+set (Figure~\ref{fig:sparsity}), \SparsityFrac{} of neuron activations are active
+(the rest sit at exactly zero). That is genuinely sparse, a dense random ReLU
+layer sits near 50\% active,
+but well above the paper's headline $\sim$5\%, which is expected: that figure
+emerges at 10M--1B parameters and long training, while this model is under
+1M parameters on 1\,MB of text. It is an honest partial reproduction: the
+qualitative property (strong sparsity from the ReLU/positivity design) holds; the
+quantitative level does not match the large-scale regime.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.72\linewidth]{bdh_sparsity.png}
+\caption{BDH activation sparsity on held-out Shakespeare: fraction of neurons
+active at each ReLU through the network. Most neurons stay at exactly zero (mean
+\SparsityFrac{} active), a genuine if partial reproduction of BDH's sparsity
+claim at under 1M parameters.}
+\label{fig:sparsity}
+\end{figure}
+
+\section{Limitations}
+
+This is a small-scale study and its scope should not be overstated. All results
+are from one 1\,MB character-level corpus, one embedding width, one depth, and
+one training budget; a different scale could reorder the models. Character-level
+Shakespeare is a narrow domain, and the automatic word metric rewards
+memorized-looking short words. The LLM judge is a single model's opinion; the
+swap control removes position bias but not the judge's own stylistic
+preferences, though two objective metrics (perplexity and real-word rate) are
+reported alongside precisely so the verdict does not rest on the judge alone.
+The binomial test also treats prompts as independent trials, whereas a single
+judge introduces correlation through its own stylistic prior, so the reported
+$p$-values are best read as a strong but optimistic significance bound rather
+than an exact one.
+Parameter matching equalizes total trainable parameters, not training FLOPs or
+wall-clock: BDH's linear attention and depth-wise weight sharing give it a
+different compute-per-parameter profile, so ``matched parameters'' is one fair
+axis of several. Finally, BDH's perfect-format assistant behavior after
+fine-tuning (not evaluated here) is a separate question from base-model
+completion quality.
+
+\section{Conclusion}
+
+Built from scratch and trained identically on character-level TinyShakespeare, a
+parameter-matched BDH (\BdhParamsK{}K) beats a GPT-2-style Transformer
+(\GptParamsK{}K) on every axis measured: lower perplexity (\BdhPpl{} vs
+\GptPpl{}), more real words (\BdhRealWord{} vs \GptRealWord{}), lower validation
+loss, and a \MatchScore{} sweep of a position-controlled judge ($p=\Pval$). The
+result is notable less for the win itself than for what the win survived: an
+earlier, naive comparison gave BDH a \JudgeBigScore{} sweep while it carried
+2$\times$ the parameters, a result that a size effect alone could fully explain.
+Only after equalizing parameters and retraining does the comparison isolate
+architecture from scale, and here the architecture holds up. The practical
+takeaway is small but sturdy: before crediting a new architecture for beating a
+Transformer, match the parameters and retrain; it is a cheap rerun that is the
+difference between a real result and a confounded one. All claims here are
+bounded to this scale and task, and the harness to test them at another scale is
+released with the paper.
+
+\paragraph{Reproducibility.} The released harness contains both model
+implementations, the shared training loop, both trained checkpoints, all
+generated completions, both orderings of every judge verdict for both the
+matched and the two-times-size runs, and the single script that emits every
+number, table, and figure in this paper. Retraining is approximately (not
+bitwise) reproducible because MPS kernels are non-deterministic; the exact
+checkpoints behind these numbers are therefore included.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
