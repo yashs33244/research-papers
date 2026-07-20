@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Size or Architecture? A Parameter-Matched Comparison of a Transformer and the Dragon Hatchling</title>
+<meta name="citation_title" content="Size or Architecture? A Parameter-Matched, From-Scratch Comparison of a Transformer and the Dragon Hatchling">
+<meta name="citation_author" content="Singh, Yash">
+<meta name="citation_publication_date" content="2026/07/18">
+<meta name="citation_pdf_url" content="https://research.itsyash.space/nano-gpt-vs-bdh/paper.pdf">
+<meta name="citation_technical_report_institution" content="Independent">
+<meta name="description" content="A from-scratch, parameter-matched comparison of a GPT-2-style Transformer and BDH (the Dragon Hatchling) on character-level Shakespeare. A first naive comparison gave BDH a 30-0 sweep of a position-controlled LLM judge, but BDH had ~2x the parameters. After matching parameter counts (818K vs 803K) and retraining both from scratch, BDH still wins: perplexity 4.26 vs 5.76 and a 29-0 swap-controlled judge sweep (p=3.7e-9). The advantage survives, so on this task it is architectural, not a size effect. Includes the full reproducible harness, both checkpoints, and every judge verdict.">
+<style>body{font-family:Georgia,serif;max-width:720px;margin:3rem auto;padding:0 1rem;line-height:1.6;color:#222}a{color:#0645ad}</style>
+</head>
+<body>
+<h1>Size or Architecture? A Parameter-Matched, From-Scratch Comparison of a Transformer and the Dragon Hatchling</h1>
+<p><b>Yash Singh</b> - IIIT Una</p>
+<p>Two character-level language models, built from scratch and trained identically on TinyShakespeare: a GPT-2-style Transformer and BDH (the "Dragon Hatchling", arXiv:2509.26507), a brain-inspired architecture using linear attention over a sparse, positive neuron field. A first, naive comparison gave BDH a 30-0 sweep of a position-controlled LLM judge - but BDH had roughly twice the parameters, so the result was confounded by size. After shrinking BDH to match the Transformer's parameter budget (818K vs 803K, matched within 2%) and retraining both from scratch, BDH still wins on every axis: perplexity 4.26 vs 5.76, more real words, lower validation loss, and a 29-0 decisive judge sweep at 97% swap-consistency (p = 3.7e-9). The advantage survives parameter matching, so on this task it is architectural, not a size effect. The broader lesson is methodological: a 2x parameter gap alone can manufacture a clean-looking sweep, and only a parameter-matched rerun separates architecture from size. Includes the full reproducible harness, both trained checkpoints, all completions, and both orderings of every judge verdict.</p>
+<p><a href="paper.pdf">Download PDF</a> - <a href="https://github.com/yashs33244/research-papers/tree/main/nano-gpt-vs-bdh">LaTeX source + code</a></p>
+<p><a href="../index.html">All papers</a></p>
+</body>
+</html>
