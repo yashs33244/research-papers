@@ -1,0 +1,31 @@
+# The single conda environment for this project: "nanobdh".
+# Both models (the GPT-2-style transformer AND the BDH/Dragon Hatchling model)
+# run in this one environment - they need the exact same dependency, PyTorch.
+#
+# Create it once:      conda env create -f environment.yml
+# Activate it:         conda activate nanobdh
+# Update it later:     conda env update -f environment.yml --prune
+# Remove it:           conda env remove -n nanobdh
+#
+# Why these packages:
+#   python 3.11  - the language we write everything in (3.11 is stable + fast).
+#   torch        - the deep-learning library: tensors, autograd (automatic
+#                  differentiation), and Apple-GPU (MPS) acceleration on your Mac.
+#   numpy        - fast arrays; used for small data prep and math.
+#   matplotlib   - plotting loss curves and the interpretability figures.
+#
+# NOTE: torch, numpy, and matplotlib are ALL installed via pip (not conda) on
+# purpose. Mixing conda-forge numpy (which links conda's OpenMP) with the pip
+# torch wheel (which bundles its own OpenMP) puts two OpenMP runtimes in one
+# process and crashes on macOS ("libomp.dylib already initialized"). Keeping them
+# all on pip means a single OpenMP runtime and a clean run.
+name: nanobdh
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - torch        # arm64 build with MPS (Apple GPU) support
+      - numpy
+      - matplotlib

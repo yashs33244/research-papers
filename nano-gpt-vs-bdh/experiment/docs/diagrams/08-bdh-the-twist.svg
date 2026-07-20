@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="740" viewBox="0 0 1920 740" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/>
+    </marker>
+    <marker id="arrowR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#D1495B"/>
+    </marker>
+  </defs>
+
+  <text x="960" y="42" text-anchor="middle" font-size="22" font-weight="bold" fill="#1A1D23">One BDH layer vs one GPT layer</text>
+  <text x="960" y="65" text-anchor="middle" font-size="13" fill="#5A6472">same input, same output, same LM head - only what happens in between differs</text>
+
+  <!-- shared input -->
+  <rect x="40" y="300" width="170" height="120" rx="12" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.8"/>
+  <text x="125" y="352" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1D23">Positions,</text>
+  <text x="125" y="372" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1D23">width C</text>
+  <text x="125" y="398" text-anchor="middle" font-size="11" font-family="Menlo, monospace" fill="#5A6472">(B, T, C)</text>
+
+  <!-- lane labels -->
+  <text x="125" y="120" text-anchor="middle" font-size="15" font-weight="bold" fill="#2E86AB">GPT layer</text>
+  <text x="125" y="620" text-anchor="middle" font-size="15" font-weight="bold" fill="#9A6B00">BDH layer</text>
+
+  <!-- input branches -->
+  <path d="M210,330 C240,300 240,210 250,180" fill="none" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M210,390 C240,430 240,500 250,530" fill="none" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- ============ GPT lane (top) ============ -->
+  <rect x="250" y="130" width="240" height="100" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="370" y="168" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">Self-attention</text>
+  <text x="370" y="190" text-anchor="middle" font-size="11" fill="#5A6472">build Q, K, V</text>
+  <text x="370" y="207" text-anchor="middle" font-size="11" fill="#5A6472">(3 separate projections)</text>
+
+  <!-- KV cache side box -->
+  <rect x="270" y="20" width="200" height="66" rx="10" fill="#FBECEE" stroke="#D1495B" stroke-width="1.6"/>
+  <text x="370" y="47" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#D1495B">KV-cache</text>
+  <text x="370" y="66" text-anchor="middle" font-size="10.5" fill="#5A6472">grows with T</text>
+  <path d="M370,130 L370,88" fill="none" stroke="#D1495B" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrowR)"/>
+  <text x="500" y="110" text-anchor="middle" font-size="10" fill="#D1495B">stores every past token</text>
+
+  <line x1="490" y1="180" x2="598" y2="180" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="600" y="130" width="240" height="100" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="720" y="168" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">Softmax over</text>
+  <text x="720" y="190" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">all token pairs</text>
+  <text x="720" y="212" text-anchor="middle" font-size="11" fill="#D1495B">cost T x T (quadratic)</text>
+
+  <line x1="840" y1="180" x2="948" y2="180" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="950" y="130" width="240" height="100" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="1070" y="175" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">MLP: C -&gt; 4C -&gt; C</text>
+  <text x="1070" y="197" text-anchor="middle" font-size="11" fill="#5A6472">dense, signed activations</text>
+
+  <line x1="1190" y1="180" x2="1428" y2="180" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="1430" y="130" width="200" height="100" rx="11" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.6"/>
+  <text x="1530" y="175" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">+ residual,</text>
+  <text x="1530" y="196" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">norm</text>
+
+  <path d="M1630,180 C1680,180 1680,300 1700,320" fill="none" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- ============ BDH lane (bottom) ============ -->
+  <rect x="250" y="480" width="180" height="100" rx="11" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.6"/>
+  <text x="340" y="525" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">Encoder</text>
+  <text x="340" y="547" text-anchor="middle" font-size="11" fill="#9A6B00">lift C -&gt; N (low-rank)</text>
+
+  <line x1="430" y1="530" x2="488" y2="530" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="490" y="480" width="220" height="100" rx="11" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.6"/>
+  <text x="600" y="518" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">ReLU -&gt; sparse</text>
+  <text x="600" y="540" text-anchor="middle" font-size="11" fill="#9A6B00">positive neuron field</text>
+  <text x="600" y="557" text-anchor="middle" font-size="10" font-family="Menlo, monospace" fill="#5A6472">(B, n_head, T, N)</text>
+
+  <line x1="710" y1="530" x2="768" y2="530" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="770" y="480" width="230" height="100" rx="11" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.6"/>
+  <text x="885" y="514" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">Linear attention</text>
+  <text x="885" y="535" text-anchor="middle" font-size="10.5" fill="#9A6B00">Q = K = sparse neurons,</text>
+  <text x="885" y="552" text-anchor="middle" font-size="10.5" fill="#9A6B00">V = input; causal mask</text>
+
+  <!-- synaptic state side box -->
+  <rect x="785" y="640" width="200" height="66" rx="10" fill="#FBECEE" stroke="#D1495B" stroke-width="1.6"/>
+  <text x="885" y="667" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#D1495B">Synaptic state</text>
+  <text x="885" y="686" text-anchor="middle" font-size="10.5" fill="#5A6472">fixed size, runs over T</text>
+  <path d="M885,580 L885,638" fill="none" stroke="#D1495B" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrowR)"/>
+  <text x="1030" y="615" text-anchor="middle" font-size="10" fill="#D1495B">memory in synapses</text>
+
+  <line x1="1000" y1="530" x2="1058" y2="530" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="1060" y="480" width="200" height="100" rx="11" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.6"/>
+  <text x="1160" y="518" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Element-wise gate</text>
+  <text x="1160" y="540" text-anchor="middle" font-size="10.5" font-family="Menlo, monospace" fill="#9A6B00">x_sparse * y_sparse</text>
+  <text x="1160" y="557" text-anchor="middle" font-size="10" fill="#5A6472">(stays sparse)</text>
+
+  <line x1="1260" y1="530" x2="1318" y2="530" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="1320" y="480" width="180" height="100" rx="11" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.6"/>
+  <text x="1410" y="518" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">Decoder</text>
+  <text x="1410" y="540" text-anchor="middle" font-size="10.5" fill="#9A6B00">N -&gt; C (low-rank,</text>
+  <text x="1410" y="556" text-anchor="middle" font-size="10.5" fill="#9A6B00">shared across layers)</text>
+
+  <line x1="1500" y1="530" x2="1558" y2="530" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <rect x="1560" y="480" width="150" height="100" rx="11" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.6"/>
+  <text x="1635" y="525" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1A1D23">+ residual,</text>
+  <text x="1635" y="546" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1A1D23">norm</text>
+
+  <path d="M1710,530 C1740,530 1740,420 1700,400" fill="none" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- shared output -->
+  <rect x="1700" y="300" width="180" height="120" rx="12" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.8"/>
+  <text x="1790" y="348" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">Updated</text>
+  <text x="1790" y="368" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">positions, C</text>
+  <text x="1790" y="394" text-anchor="middle" font-size="11" font-family="Menlo, monospace" fill="#5A6472">(B, T, C)</text>
+
+  <!-- to LM head -->
+  <text x="1790" y="452" text-anchor="middle" font-size="11" fill="#5A6472">then, identical for both:</text>
+  <rect x="1700" y="466" width="180" height="56" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="1790" y="490" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1A1D23">LM head</text>
+  <text x="1790" y="509" text-anchor="middle" font-size="10.5" fill="#5A6472">-&gt; V scores</text>
+  <line x1="1790" y1="420" x2="1790" y2="464" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- key contrast note -->
+  <rect x="40" y="640" width="700" height="66" rx="10" fill="#FBECEE" stroke="#D1495B" stroke-width="1.4"/>
+  <text x="390" y="667" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#D1495B">Key contrast: KV-cache (grows with T) vs synaptic state (fixed size)</text>
+  <text x="390" y="688" text-anchor="middle" font-size="11" fill="#5A6472">this is why BDH runs in linear cost and constant memory over context length</text>
+</svg>

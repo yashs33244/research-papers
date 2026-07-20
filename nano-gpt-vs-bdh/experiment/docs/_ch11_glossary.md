@@ -1,0 +1,22 @@
+- Base model (pretrained model)
+- Assistant / chat model
+- Pretraining
+- Post-training
+- Fine-tuning
+- SFT (Supervised Fine-Tuning)
+- Instruction tuning
+- Chat template
+- Role markers
+- Loss masking
+- Ignore index (-1)
+- Turn terminator
+- Assistant turn
+- Demonstration data
+- RLHF (Reinforcement Learning from Human Feedback)
+- Reward model
+- PPO (Proximal Policy Optimization)
+- DPO (Direct Preference Optimization)
+- Preference data
+- Alignment
+- cross_entropy ignore_index
+- In-vocab role markers (no special tokens)

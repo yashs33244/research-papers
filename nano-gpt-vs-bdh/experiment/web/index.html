@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+  nano-bdh chat UI: a two-panel, side-by-side comparison of our two fine-tuned
+  character-level models. Vanilla HTML/CSS/JS, no build step, no CDN dependencies.
+
+  LEFT panel  = GPT (Transformer)
+  RIGHT panel = BDH (Dragon Hatchling)
+
+  One shared input box at the bottom. Sending a message appends it to BOTH panels
+  and calls POST /chat twice (once per model), showing each reply in its own panel.
+  The wiring lives in app.js; the styling in style.css.
+
+  Honest framing (kept visible in the header): these are tiny ~1-2M param models,
+  fine-tuned only to learn the CHAT FORMAT. Replies will be broken English.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>nano-bdh chat: GPT vs BDH</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <h1>nano-bdh chat</h1>
+      <p class="tagline">
+        Two tiny char-level models, post-trained (SFT) to chat. Same input, side by
+        side. Honest note: about 1-2M params trained on 1MB of Shakespeare, so they
+        learn the turn-taking FORMAT, not real answers. Replies will be broken
+        English by design.
+      </p>
+    </div>
+  </header>
+
+  <main class="panels">
+    <!-- LEFT: GPT / Transformer -->
+    <section class="panel" data-model="gpt">
+      <div class="panel-head">
+        <div class="panel-title">
+          <span class="dot dot-blue"></span>
+          GPT <span class="subtitle">(Transformer)</span>
+        </div>
+        <div class="stats" id="stats-gpt">params 802K &middot; base val loss 1.76</div>
+      </div>
+      <div class="log" id="log-gpt" aria-live="polite"></div>
+    </section>
+
+    <!-- RIGHT: BDH / Dragon Hatchling -->
+    <section class="panel" data-model="bdh">
+      <div class="panel-head">
+        <div class="panel-title">
+          <span class="dot dot-amber"></span>
+          BDH <span class="subtitle">(Dragon Hatchling)</span>
+        </div>
+        <div class="stats" id="stats-bdh">params 1.59M &middot; base val loss 1.53</div>
+      </div>
+      <div class="log" id="log-bdh" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer class="composer">
+    <form id="chat-form" class="composer-inner" autocomplete="off">
+      <input
+        id="input"
+        type="text"
+        placeholder="Say hello to both models..."
+        aria-label="Message both models"
+      />
+      <button id="send" type="submit">Send</button>
+    </form>
+    <p class="hint">
+      Sends your message to both models at once. Press Enter or click Send.
+    </p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

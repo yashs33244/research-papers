@@ -1,0 +1,18 @@
+device: mps
+vocab size (V): 65
+model: bdh  params: 803,072
+iter     0 | train 4.1434 | val 4.1450
+iter   250 | train 1.9302 | val 2.0200
+iter   500 | train 1.6023 | val 1.7627
+iter   750 | train 1.4792 | val 1.6705
+iter  1000 | train 1.4190 | val 1.6056
+iter  1250 | train 1.3726 | val 1.5814
+iter  1500 | train 1.3383 | val 1.5732
+iter  1750 | train 1.3210 | val 1.5450
+iter  2000 | train 1.2894 | val 1.5385
+iter  2250 | train 1.2769 | val 1.5321
+iter  2500 | train 1.2634 | val 1.5264
+iter  2750 | train 1.2393 | val 1.5322
+iter  3000 | train 1.2405 | val 1.5249
+done. best val loss 1.5249. checkpoint -> /Users/tanishqsingh/Desktop/yash_desktop_files/projects/research-projects/nano-bdh/out/bdh.pt
+sample with:  python -m nanobdh.sample --model bdh

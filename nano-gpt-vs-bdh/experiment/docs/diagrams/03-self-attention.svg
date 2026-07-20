@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1660" height="640" viewBox="0 0 1660 640" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/>
+    </marker>
+    <marker id="arrowR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#D1495B"/>
+    </marker>
+  </defs>
+
+  <text x="830" y="40" text-anchor="middle" font-size="22" font-weight="bold" fill="#1A1D23">One attention head, step by step (causal)</text>
+  <text x="830" y="63" text-anchor="middle" font-size="13" fill="#5A6472">each position looks back at earlier positions and pulls in a weighted blend of their values</text>
+
+  <!-- STAGE 1: input stack -->
+  <g font-family="Menlo, monospace" font-size="13">
+    <rect x="40" y="200" width="56" height="40" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="68" y="225" text-anchor="middle" fill="#1A1D23">s</text>
+    <rect x="40" y="242" width="56" height="40" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="68" y="267" text-anchor="middle" fill="#1A1D23">w</text>
+    <rect x="40" y="284" width="56" height="40" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="68" y="309" text-anchor="middle" fill="#1A1D23">o</text>
+    <rect x="40" y="326" width="56" height="40" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="68" y="351" text-anchor="middle" fill="#1A1D23">r</text>
+  </g>
+  <text x="68" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1D23">Input x</text>
+  <text x="68" y="392" text-anchor="middle" font-size="10.5" fill="#5A6472">(B, T, C)</text>
+
+  <!-- STAGE 2: projections -->
+  <line x1="96" y1="240" x2="168" y2="200" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="96" y1="283" x2="168" y2="283" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="96" y1="326" x2="168" y2="366" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="170" y="178" width="130" height="44" rx="9" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.5"/>
+  <text x="235" y="205" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">W_q (learned)</text>
+  <rect x="170" y="262" width="130" height="44" rx="9" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.5"/>
+  <text x="235" y="289" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">W_k (learned)</text>
+  <rect x="170" y="346" width="130" height="44" rx="9" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.5"/>
+  <text x="235" y="373" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">W_v (learned)</text>
+  <text x="235" y="420" text-anchor="middle" font-size="10.5" fill="#5A6472">three learned linear projections</text>
+
+  <!-- Q/K/V columns -->
+  <line x1="300" y1="200" x2="352" y2="200" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="300" y1="284" x2="352" y2="284" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="300" y1="368" x2="352" y2="368" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="354" y="182" width="90" height="36" rx="7" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="399" y="205" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1D23">Q (T,hs)</text>
+  <rect x="354" y="266" width="90" height="36" rx="7" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="399" y="289" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1D23">K (T,hs)</text>
+  <rect x="354" y="350" width="90" height="36" rx="7" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="399" y="373" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1D23">V (T,hs)</text>
+
+  <!-- STAGE 3: scores grid -->
+  <line x1="444" y1="200" x2="516" y2="255" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="444" y1="284" x2="516" y2="290" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <g transform="translate(520,240)">
+    <rect x="0" y="0" width="136" height="136" fill="#FFFFFF" stroke="#2E86AB" stroke-width="1.4"/>
+    <line x1="34" y1="0" x2="34" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="68" y1="0" x2="68" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="102" y1="0" x2="102" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="34" x2="136" y2="34" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="68" x2="136" y2="68" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="102" x2="136" y2="102" stroke="#2E86AB" stroke-width="0.8"/>
+    <circle cx="17" cy="17" r="3" fill="#5A6472"/><circle cx="51" cy="17" r="3" fill="#5A6472"/><circle cx="85" cy="51" r="3" fill="#5A6472"/><circle cx="17" cy="51" r="3" fill="#5A6472"/><circle cx="51" cy="85" r="3" fill="#5A6472"/><circle cx="85" cy="119" r="3" fill="#5A6472"/><circle cx="17" cy="119" r="3" fill="#5A6472"/><circle cx="119" cy="119" r="3" fill="#5A6472"/>
+  </g>
+  <text x="588" y="220" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1D23">scores = Q K^T / sqrt(hs)</text>
+  <text x="588" y="398" text-anchor="middle" font-size="10.5" fill="#5A6472">shape (B, T, T)</text>
+
+  <!-- STAGE 4: mask -->
+  <line x1="662" y1="308" x2="726" y2="308" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <g transform="translate(730,240)" font-family="Menlo, monospace" font-size="10">
+    <rect x="0" y="0" width="136" height="136" fill="#FFFFFF" stroke="#2E86AB" stroke-width="1.4"/>
+    <!-- masked upper-right triangle cells (col>row) -->
+    <rect x="34" y="0" width="34" height="34" fill="#F3D6DB"/>
+    <rect x="68" y="0" width="34" height="34" fill="#F3D6DB"/>
+    <rect x="102" y="0" width="34" height="34" fill="#F3D6DB"/>
+    <rect x="68" y="34" width="34" height="34" fill="#F3D6DB"/>
+    <rect x="102" y="34" width="34" height="34" fill="#F3D6DB"/>
+    <rect x="102" y="68" width="34" height="34" fill="#F3D6DB"/>
+    <line x1="34" y1="0" x2="34" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="68" y1="0" x2="68" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="102" y1="0" x2="102" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="34" x2="136" y2="34" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="68" x2="136" y2="68" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="102" x2="136" y2="102" stroke="#2E86AB" stroke-width="0.8"/>
+    <text x="51" y="21" text-anchor="middle" fill="#D1495B">-inf</text>
+    <text x="85" y="21" text-anchor="middle" fill="#D1495B">-inf</text>
+    <text x="119" y="21" text-anchor="middle" fill="#D1495B">-inf</text>
+    <text x="85" y="55" text-anchor="middle" fill="#D1495B">-inf</text>
+    <text x="119" y="55" text-anchor="middle" fill="#D1495B">-inf</text>
+    <text x="119" y="89" text-anchor="middle" fill="#D1495B">-inf</text>
+  </g>
+  <text x="798" y="220" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1D23">causal mask</text>
+  <text x="798" y="398" text-anchor="middle" font-size="10.5" fill="#D1495B">future -> -inf (no peeking ahead)</text>
+
+  <!-- STAGE 5: softmax -->
+  <line x1="872" y1="308" x2="936" y2="308" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="904" y="298" text-anchor="middle" font-size="10" fill="#5A6472">softmax</text>
+  <text x="904" y="326" text-anchor="middle" font-size="9" fill="#5A6472">per row</text>
+  <g transform="translate(940,240)" font-family="Menlo, monospace" font-size="10">
+    <rect x="0" y="0" width="136" height="136" fill="#FFFFFF" stroke="#2E86AB" stroke-width="1.4"/>
+    <!-- highlighted last row (r) -->
+    <rect x="0" y="102" width="34" height="34" fill="#F6DFA6"/>
+    <rect x="34" y="102" width="34" height="34" fill="#FBEFD6"/>
+    <rect x="68" y="102" width="34" height="34" fill="#FBEFD6"/>
+    <rect x="102" y="102" width="34" height="34" fill="#FBEFD6"/>
+    <line x1="34" y1="0" x2="34" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="68" y1="0" x2="68" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="102" y1="0" x2="102" y2="136" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="34" x2="136" y2="34" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="68" x2="136" y2="68" stroke="#2E86AB" stroke-width="0.8"/>
+    <line x1="0" y1="102" x2="136" y2="102" stroke="#2E86AB" stroke-width="0.8"/>
+    <text x="17" y="123" text-anchor="middle" fill="#9A6B00">.6</text>
+    <text x="51" y="123" text-anchor="middle" fill="#9A6B00">.2</text>
+    <text x="85" y="123" text-anchor="middle" fill="#9A6B00">.1</text>
+    <text x="119" y="123" text-anchor="middle" fill="#9A6B00">.1</text>
+  </g>
+  <text x="1008" y="220" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1D23">attention weights</text>
+  <text x="1008" y="398" text-anchor="middle" font-size="10.5" fill="#5A6472">rows sum to 1; row 'r' focuses back</text>
+  <!-- big weight arrow within highlighted row -->
+  <path d="M1043,378 C1010,410 970,410 958,362" fill="none" stroke="#D1495B" stroke-width="2" marker-end="url(#arrowR)"/>
+
+  <!-- STAGE 6: weighted sum -->
+  <line x1="1076" y1="308" x2="1148" y2="308" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="1150" y="264" width="180" height="88" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="1240" y="298" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">weighted sum</text>
+  <text x="1240" y="320" text-anchor="middle" font-size="11.5" font-family="Menlo, monospace" fill="#9A6B00">weights @ V</text>
+  <!-- also feed V into this box (routed below the grids) -->
+  <path d="M399,386 L399,410 L1240,410 L1240,354" fill="none" stroke="#2E86AB" stroke-width="1.2" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+  <text x="760" y="428" text-anchor="middle" font-size="10" fill="#2E86AB">V flows straight to the weighted sum (dashed)</text>
+
+  <line x1="1330" y1="308" x2="1394" y2="308" stroke="#5A6472" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <g font-family="Menlo, monospace" font-size="12">
+    <rect x="1398" y="248" width="60" height="34" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="1428" y="270" text-anchor="middle" fill="#1A1D23">o1</text>
+    <rect x="1398" y="284" width="60" height="34" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="1428" y="306" text-anchor="middle" fill="#1A1D23">o2</text>
+    <rect x="1398" y="320" width="60" height="34" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="1428" y="342" text-anchor="middle" fill="#1A1D23">o3</text>
+    <rect x="1398" y="356" width="60" height="34" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="1428" y="378" text-anchor="middle" fill="#1A1D23">o4</text>
+  </g>
+  <text x="1428" y="228" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1D23">out (B,T,hs)</text>
+  <text x="1428" y="412" text-anchor="middle" font-size="10" fill="#5A6472">each carries</text>
+  <text x="1428" y="426" text-anchor="middle" font-size="10" fill="#5A6472">its past context</text>
+
+  <!-- bottom banner + legend -->
+  <rect x="40" y="500" width="1120" height="56" rx="10" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.2"/>
+  <text x="600" y="527" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">The whole head in one line:</text>
+  <text x="600" y="546" text-anchor="middle" font-size="13" font-family="Menlo, monospace" fill="#1A1D23">out = softmax( (Q K^T)/sqrt(hs) + mask ) V</text>
+
+  <rect x="1190" y="500" width="270" height="56" rx="10" fill="#FFFFFF" stroke="#5A6472" stroke-width="1.2"/>
+  <text x="1325" y="522" text-anchor="middle" font-size="11" fill="#5A6472">B=batch, T=context length,</text>
+  <text x="1325" y="540" text-anchor="middle" font-size="11" fill="#5A6472">C=embed dim, hs=head size</text>
+</svg>

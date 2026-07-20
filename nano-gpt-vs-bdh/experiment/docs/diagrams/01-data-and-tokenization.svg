@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="560" viewBox="0 0 1500 560" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/>
+    </marker>
+    <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2A9D8F"/>
+    </marker>
+  </defs>
+
+  <text x="750" y="40" text-anchor="middle" font-size="22" font-weight="bold" fill="#1A1D23">Chapter 1: text becomes B x T batches</text>
+  <text x="750" y="63" text-anchor="middle" font-size="13" fill="#5A6472">raw characters are turned into integer ids, then sliced into fixed-size training windows</text>
+
+  <!-- Box 1: TinyShakespeare -->
+  <rect x="30" y="150" width="200" height="110" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="130" y="182" text-anchor="middle" font-size="15" font-weight="bold" fill="#1A1D23">TinyShakespeare</text>
+  <text x="130" y="204" text-anchor="middle" font-size="11.5" fill="#5A6472">~1 MB of text</text>
+  <text x="130" y="226" text-anchor="middle" font-size="11" font-family="Menlo, monospace" fill="#5A6472">"First Citizen:</text>
+  <text x="130" y="242" text-anchor="middle" font-size="11" font-family="Menlo, monospace" fill="#5A6472">Before..."</text>
+
+  <!-- arrow 1 -->
+  <line x1="230" y1="205" x2="288" y2="205" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="259" y="196" text-anchor="middle" font-size="10.5" fill="#5A6472">download</text>
+  <text x="259" y="228" text-anchor="middle" font-size="9.5" font-family="Menlo, monospace" fill="#9A6B00">data/prepare.py</text>
+
+  <!-- Box 2: Vocabulary -->
+  <rect x="290" y="150" width="230" height="110" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="405" y="180" text-anchor="middle" font-size="15" font-weight="bold" fill="#1A1D23">Vocabulary</text>
+  <text x="405" y="202" text-anchor="middle" font-size="11.5" fill="#5A6472">sorted unique chars</text>
+  <text x="405" y="222" text-anchor="middle" font-size="11.5" fill="#5A6472">V ~= 65</text>
+  <text x="405" y="244" text-anchor="middle" font-size="11" font-family="Menlo, monospace" fill="#9A6B00">stoi / itos</text>
+
+  <!-- callout under box 2 -->
+  <rect x="300" y="288" width="210" height="66" rx="9" fill="#FFFFFF" stroke="#5A6472" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <text x="405" y="310" text-anchor="middle" font-size="11" font-family="Menlo, monospace" fill="#1A1D23">'h'  ->  46</text>
+  <text x="405" y="332" text-anchor="middle" font-size="11" font-family="Menlo, monospace" fill="#1A1D23">46  ->  'h'</text>
+  <text x="405" y="349" text-anchor="middle" font-size="9.5" fill="#5A6472">two-way mapping</text>
+  <line x1="405" y1="260" x2="405" y2="286" stroke="#5A6472" stroke-width="1.2" stroke-dasharray="4 3"/>
+
+  <!-- arrow 2 -->
+  <line x1="520" y1="205" x2="578" y2="205" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="549" y="196" text-anchor="middle" font-size="10.5" fill="#5A6472">encode()</text>
+  <text x="549" y="228" text-anchor="middle" font-size="9.5" font-family="Menlo, monospace" fill="#9A6B00">tokenizer.py</text>
+
+  <!-- Box 3: token tensor -->
+  <rect x="580" y="150" width="240" height="110" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="700" y="180" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#1A1D23">One long token tensor</text>
+  <text x="700" y="202" text-anchor="middle" font-size="11.5" fill="#5A6472">1-D, ~1,000,000 int ids</text>
+  <text x="700" y="232" text-anchor="middle" font-size="11" font-family="Menlo, monospace" fill="#1A1D23">[18, 47, 56, 57, ...]</text>
+
+  <!-- arrow 3 -->
+  <line x1="820" y1="205" x2="878" y2="205" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="849" y="188" text-anchor="middle" font-size="10" fill="#5A6472">90 / 10 split</text>
+  <text x="849" y="228" text-anchor="middle" font-size="9.5" fill="#5A6472">by position</text>
+
+  <!-- Box 4: train/val -->
+  <rect x="880" y="140" width="230" height="130" rx="11" fill="#FFFFFF" stroke="#5A6472" stroke-width="1.4" stroke-dasharray="5 3"/>
+  <rect x="896" y="152" width="198" height="48" rx="8" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.5"/>
+  <text x="995" y="173" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1A1D23">Train set</text>
+  <text x="995" y="190" text-anchor="middle" font-size="10.5" fill="#5A6472">first 90%</text>
+  <rect x="896" y="210" width="198" height="48" rx="8" fill="#ECEEF1" stroke="#9AA3AD" stroke-width="1.5"/>
+  <text x="995" y="231" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#5A6472">Val set (last 10%)</text>
+  <text x="995" y="248" text-anchor="middle" font-size="10.5" fill="#5A6472">never trained on</text>
+
+  <!-- arrow 4 -->
+  <line x1="1110" y1="176" x2="1168" y2="176" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="1139" y="160" text-anchor="middle" font-size="9.5" fill="#5A6472">sample B random</text>
+  <text x="1139" y="200" text-anchor="middle" font-size="9.5" fill="#5A6472">windows, length T</text>
+
+  <!-- Box 5: batch grids -->
+  <text x="1330" y="130" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Batch x: shape (B, T)</text>
+  <g font-family="Menlo, monospace" font-size="11">
+    <!-- grid x: 3 rows x 6 cols, cell 30 -->
+    <rect x="1200" y="140" width="180" height="90" fill="none"/>
+    <!-- row 0 -->
+    <rect x="1200" y="140" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1215" y="160" text-anchor="middle" fill="#1A1D23">18</text>
+    <rect x="1230" y="140" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1245" y="160" text-anchor="middle" fill="#1A1D23">47</text>
+    <rect x="1260" y="140" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1275" y="160" text-anchor="middle" fill="#1A1D23">56</text>
+    <rect x="1290" y="140" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1305" y="160" text-anchor="middle" fill="#1A1D23">57</text>
+    <rect x="1320" y="140" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1335" y="160" text-anchor="middle" fill="#1A1D23">58</text>
+    <rect x="1350" y="140" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1365" y="160" text-anchor="middle" fill="#1A1D23">1</text>
+    <!-- row 1 -->
+    <rect x="1200" y="170" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1215" y="190" text-anchor="middle" fill="#1A1D23">15</text>
+    <rect x="1230" y="170" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1245" y="190" text-anchor="middle" fill="#1A1D23">43</text>
+    <rect x="1260" y="170" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1275" y="190" text-anchor="middle" fill="#1A1D23">50</text>
+    <rect x="1290" y="170" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1305" y="190" text-anchor="middle" fill="#1A1D23">50</text>
+    <rect x="1320" y="170" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1335" y="190" text-anchor="middle" fill="#1A1D23">53</text>
+    <rect x="1350" y="170" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1365" y="190" text-anchor="middle" fill="#1A1D23">1</text>
+    <!-- row 2 -->
+    <rect x="1200" y="200" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1215" y="220" text-anchor="middle" fill="#1A1D23">1</text>
+    <rect x="1230" y="200" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1245" y="220" text-anchor="middle" fill="#1A1D23">14</text>
+    <rect x="1260" y="200" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1275" y="220" text-anchor="middle" fill="#1A1D23">43</text>
+    <rect x="1290" y="200" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1305" y="220" text-anchor="middle" fill="#1A1D23">44</text>
+    <rect x="1320" y="200" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1335" y="220" text-anchor="middle" fill="#1A1D23">53</text>
+    <rect x="1350" y="200" width="30" height="30" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.1"/><text x="1365" y="220" text-anchor="middle" fill="#1A1D23">56</text>
+  </g>
+
+  <text x="1330" y="300" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Targets y: shape (B, T)</text>
+  <text x="1330" y="318" text-anchor="middle" font-size="10.5" fill="#5A6472">= x shifted by 1</text>
+  <g font-family="Menlo, monospace" font-size="11">
+    <!-- grid y: shifted right by one cell, start x=1230 -->
+    <rect x="1230" y="330" width="30" height="30" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.1"/><text x="1245" y="350" text-anchor="middle" fill="#1A1D23">47</text>
+    <rect x="1260" y="330" width="30" height="30" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.1"/><text x="1275" y="350" text-anchor="middle" fill="#1A1D23">56</text>
+    <rect x="1290" y="330" width="30" height="30" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.1"/><text x="1305" y="350" text-anchor="middle" fill="#1A1D23">57</text>
+    <rect x="1320" y="330" width="30" height="30" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.1"/><text x="1335" y="350" text-anchor="middle" fill="#1A1D23">58</text>
+    <rect x="1350" y="330" width="30" height="30" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.1"/><text x="1365" y="350" text-anchor="middle" fill="#1A1D23">1</text>
+    <rect x="1380" y="330" width="30" height="30" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.1"/><text x="1395" y="350" text-anchor="middle" fill="#1A1D23">?</text>
+  </g>
+
+  <!-- predict-next annotation from x[0,t] to y[0,t] -->
+  <path d="M1215,172 C1215,270 1245,270 1245,328" fill="none" stroke="#2A9D8F" stroke-width="1.8" marker-end="url(#arrowG)"/>
+  <text x="1130" y="270" text-anchor="middle" font-size="11" font-weight="bold" fill="#2A9D8F">predict the</text>
+  <text x="1130" y="286" text-anchor="middle" font-size="11" font-weight="bold" fill="#2A9D8F">NEXT char</text>
+
+  <!-- bottom caption strip -->
+  <rect x="30" y="470" width="1440" height="56" rx="10" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.2"/>
+  <text x="750" y="497" text-anchor="middle" font-size="12.5" fill="#1A1D23">B = batch size, T = context length (look-back), V = vocab size.</text>
+  <text x="750" y="516" text-anchor="middle" font-size="12.5" fill="#5A6472">C (embedding dim) appears in Chapter 2.</text>
+</svg>

@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="560" viewBox="0 0 1440 560" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/>
+    </marker>
+  </defs>
+
+  <text x="720" y="40" text-anchor="middle" font-size="22" font-weight="bold" fill="#1A1D23">Token + Position Embeddings</text>
+  <text x="720" y="63" text-anchor="middle" font-size="13" fill="#5A6472">how one character becomes one summed vector: meaning plus order</text>
+
+  <!-- Input token strip -->
+  <text x="120" y="120" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#1A1D23">idx, shape (B, T)</text>
+  <g font-family="Menlo, monospace" font-size="12">
+    <rect x="60" y="135" width="120" height="34" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="120" y="157" text-anchor="middle" fill="#1A1D23">'h'   46</text>
+    <rect x="60" y="171" width="120" height="34" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="120" y="193" text-anchor="middle" fill="#1A1D23">'e'   43</text>
+    <rect x="60" y="207" width="120" height="34" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="120" y="229" text-anchor="middle" fill="#1A1D23">'l'   50</text>
+    <rect x="60" y="243" width="120" height="34" rx="6" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.4"/><text x="120" y="265" text-anchor="middle" fill="#1A1D23">'l'   50</text>
+  </g>
+  <text x="120" y="300" text-anchor="middle" font-size="10.5" fill="#5A6472">T = context length</text>
+  <text x="120" y="316" text-anchor="middle" font-size="10.5" fill="#5A6472">one example sequence</text>
+
+  <!-- Position input strip (lower) -->
+  <g font-family="Menlo, monospace" font-size="12">
+    <rect x="60" y="360" width="120" height="34" rx="6" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.4"/><text x="120" y="382" text-anchor="middle" fill="#1A1D23">pos 0,1,2,3</text>
+  </g>
+  <text x="120" y="415" text-anchor="middle" font-size="10.5" fill="#5A6472">positions [0,1,2,3]</text>
+
+  <!-- Upper lookup arrow -->
+  <line x1="180" y1="188" x2="378" y2="170" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="280" y="150" text-anchor="middle" font-size="11" fill="#5A6472">look up by token id</text>
+
+  <!-- Token embedding table -->
+  <rect x="380" y="120" width="300" height="120" rx="12" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.8"/>
+  <text x="530" y="150" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1D23">Token embedding table</text>
+  <text x="530" y="172" text-anchor="middle" font-size="11.5" font-family="Menlo, monospace" fill="#9A6B00">wte = nn.Embedding(V, C)</text>
+  <text x="530" y="192" text-anchor="middle" font-size="11" fill="#5A6472">V ~= 65 rows, one per char</text>
+  <rect x="410" y="204" width="240" height="24" rx="6" fill="#FFFFFF" stroke="#2E86AB" stroke-width="1"/>
+  <text x="530" y="221" text-anchor="middle" font-size="10.5" fill="#2E86AB">tag: meaning (what character)</text>
+
+  <!-- Lower lookup arrow -->
+  <line x1="180" y1="377" x2="378" y2="390" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="280" y="360" text-anchor="middle" font-size="11" fill="#5A6472">look up by position</text>
+
+  <!-- Position embedding table -->
+  <rect x="380" y="340" width="300" height="120" rx="12" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.8"/>
+  <text x="530" y="370" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1D23">Position embedding table</text>
+  <text x="530" y="392" text-anchor="middle" font-size="11.5" font-family="Menlo, monospace" fill="#9A6B00">wpe = nn.Embedding(T, C)</text>
+  <text x="530" y="412" text-anchor="middle" font-size="11" fill="#5A6472">T rows, one per slot</text>
+  <rect x="410" y="424" width="240" height="24" rx="6" fill="#FFFFFF" stroke="#E9A12E" stroke-width="1"/>
+  <text x="530" y="441" text-anchor="middle" font-size="10.5" fill="#9A6B00">tag: order (where in window)</text>
+
+  <!-- tok_emb output arrow -->
+  <line x1="680" y1="180" x2="878" y2="255" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="775" y="200" text-anchor="middle" font-size="10.5" fill="#5A6472">tok_emb (B,T,C)</text>
+  <text x="775" y="216" text-anchor="middle" font-size="10" font-family="Menlo, monospace" fill="#1A1D23">[0.21, -1.10, ...]</text>
+
+  <!-- pos_emb output arrow -->
+  <line x1="680" y1="400" x2="878" y2="325" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="775" y="378" text-anchor="middle" font-size="10.5" fill="#5A6472">pos_emb (T,C)</text>
+  <text x="775" y="394" text-anchor="middle" font-size="10" font-family="Menlo, monospace" fill="#1A1D23">[0.03, 0.44, ...]</text>
+
+  <!-- plus circle -->
+  <circle cx="920" cy="290" r="34" fill="#FFFFFF" stroke="#2A9D8F" stroke-width="2"/>
+  <text x="920" y="302" text-anchor="middle" font-size="34" font-weight="bold" fill="#2A9D8F">+</text>
+  <text x="920" y="352" text-anchor="middle" font-size="11" fill="#5A6472">elementwise add</text>
+  <text x="920" y="368" text-anchor="middle" font-size="10.5" fill="#5A6472">(broadcast over B)</text>
+
+  <!-- to output -->
+  <line x1="954" y1="290" x2="1058" y2="290" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- output box -->
+  <rect x="1060" y="240" width="320" height="100" rx="12" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.8"/>
+  <text x="1220" y="278" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1D23">x = tok_emb + pos_emb</text>
+  <text x="1220" y="302" text-anchor="middle" font-size="12" font-family="Menlo, monospace" fill="#1A1D23">shape (B, T, C)</text>
+  <text x="1220" y="322" text-anchor="middle" font-size="10.5" fill="#5A6472">the block input</text>
+
+  <!-- downstream arrow -->
+  <line x1="1220" y1="340" x2="1220" y2="404" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="1220" y="424" text-anchor="middle" font-size="11" fill="#5A6472">into first Transformer block (Ch.3)</text>
+
+  <!-- footnote strip -->
+  <rect x="60" y="490" width="1320" height="46" rx="10" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.2"/>
+  <text x="720" y="518" text-anchor="middle" font-size="12" fill="#5A6472">B=batch, T=context length, C=embedding dim, V=vocab size (~65). Both tables are learned. File: nanobdh/model_gpt.py</text>
+</svg>

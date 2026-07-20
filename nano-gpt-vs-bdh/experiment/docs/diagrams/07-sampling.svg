@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="560" viewBox="0 0 1920 560" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/>
+    </marker>
+    <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2A9D8F"/>
+    </marker>
+  </defs>
+
+  <text x="960" y="42" text-anchor="middle" font-size="22" font-weight="bold" fill="#1A1D23">One step of the generation loop</text>
+  <text x="960" y="65" text-anchor="middle" font-size="13" fill="#5A6472">predict scores for the next character, shape them with two knobs, sample one id, append, and repeat</text>
+
+  <!-- feedback loop over the top -->
+  <path d="M1777,182 C1777,112 1777,112 1697,112 L207,112 C127,112 127,112 127,180" fill="none" stroke="#2A9D8F" stroke-width="3" marker-end="url(#arrowG)"/>
+  <text x="960" y="103" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#2A9D8F">append and repeat (T grows by 1)  -  autoregression</text>
+
+  <!-- helper: 7 boxes -->
+  <!-- 1 -->
+  <rect x="40" y="182" width="175" height="90" rx="11" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.6"/>
+  <text x="127" y="218" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Context so far</text>
+  <text x="127" y="237" text-anchor="middle" font-size="11" fill="#5A6472">(token ids)</text>
+  <text x="127" y="292" text-anchor="middle" font-size="10.5" font-family="Menlo, monospace" fill="#5A6472">(B, T)</text>
+
+  <line x1="215" y1="227" x2="313" y2="227" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="264" y="210" text-anchor="middle" font-size="9.5" fill="#5A6472">crop to last</text>
+  <text x="264" y="222" text-anchor="middle" font-size="9.5" fill="#5A6472">block_size</text>
+
+  <!-- 2 model -->
+  <rect x="315" y="182" width="175" height="90" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.8"/>
+  <text x="402" y="215" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Model forward</text>
+  <text x="402" y="234" text-anchor="middle" font-size="9.5" font-family="Menlo, monospace" fill="#5A6472">model_gpt / model_bdh</text>
+  <text x="402" y="292" text-anchor="middle" font-size="10.5" font-family="Menlo, monospace" fill="#5A6472">-&gt; logits (B, T, V)</text>
+
+  <line x1="490" y1="227" x2="588" y2="227" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="539" y="210" text-anchor="middle" font-size="9" fill="#5A6472">take last step</text>
+  <text x="539" y="222" text-anchor="middle" font-size="9" font-family="Menlo, monospace" fill="#5A6472">logits[:,-1,:]</text>
+
+  <!-- 3 -->
+  <rect x="590" y="182" width="175" height="90" rx="11" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.6"/>
+  <text x="677" y="218" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Logits for</text>
+  <text x="677" y="237" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">next char</text>
+  <text x="677" y="292" text-anchor="middle" font-size="10.5" font-family="Menlo, monospace" fill="#5A6472">(B, V), ~65 raw scores</text>
+
+  <line x1="765" y1="227" x2="863" y2="227" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="814" y="210" text-anchor="middle" font-size="9.5" fill="#5A6472">divide by</text>
+  <text x="814" y="222" text-anchor="middle" font-size="9.5" fill="#5A6472">temperature</text>
+
+  <!-- 4 temperature (warm) -->
+  <rect x="865" y="182" width="175" height="90" rx="11" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.8"/>
+  <text x="952" y="218" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Temperature</text>
+  <text x="952" y="237" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">scaling</text>
+  <text x="952" y="292" text-anchor="middle" font-size="10" fill="#9A6B00">T&lt;1 peakier / T&gt;1 flatter</text>
+
+  <line x1="1040" y1="227" x2="1138" y2="227" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="1089" y="210" text-anchor="middle" font-size="9.5" fill="#5A6472">keep top k,</text>
+  <text x="1089" y="222" text-anchor="middle" font-size="9.5" fill="#5A6472">rest -&gt; -inf</text>
+
+  <!-- 5 top-k (warm) -->
+  <rect x="1140" y="182" width="175" height="90" rx="11" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.8"/>
+  <text x="1227" y="228" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Top-k crop</text>
+  <text x="1227" y="292" text-anchor="middle" font-size="10.5" fill="#9A6B00">only k survivors</text>
+
+  <line x1="1315" y1="227" x2="1413" y2="227" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="1364" y="216" text-anchor="middle" font-size="9.5" fill="#5A6472">softmax</text>
+
+  <!-- 6 -->
+  <rect x="1415" y="182" width="175" height="90" rx="11" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.6"/>
+  <text x="1502" y="218" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Softmax -&gt;</text>
+  <text x="1502" y="237" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">probabilities</text>
+  <text x="1502" y="292" text-anchor="middle" font-size="10.5" font-family="Menlo, monospace" fill="#5A6472">(B, V), sums to 1</text>
+
+  <line x1="1590" y1="227" x2="1688" y2="227" stroke="#5A6472" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="1639" y="210" text-anchor="middle" font-size="9" fill="#5A6472">torch.</text>
+  <text x="1639" y="222" text-anchor="middle" font-size="9" fill="#5A6472">multinomial</text>
+
+  <!-- 7 -->
+  <rect x="1690" y="182" width="175" height="90" rx="11" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="1777" y="218" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Sampled</text>
+  <text x="1777" y="237" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">character id</text>
+  <text x="1777" y="292" text-anchor="middle" font-size="10.5" font-family="Menlo, monospace" fill="#5A6472">(B, 1)</text>
+
+  <!-- knob note -->
+  <text x="1090" y="145" text-anchor="middle" font-size="11" font-weight="bold" fill="#9A6B00">the two tunable controls</text>
+
+  <!-- decode offshoot -->
+  <path d="M1777,272 L1777,380" fill="none" stroke="#5A6472" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="1900" y="330" text-anchor="end" font-size="10.5" fill="#5A6472">after max_new_tokens</text>
+  <rect x="1610" y="382" width="330" height="66" rx="11" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.6"/>
+  <text x="1775" y="412" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">Decode with CharTokenizer</text>
+  <text x="1775" y="432" text-anchor="middle" font-size="11" fill="#5A6472">-&gt; text (tokenizer.py)</text>
+</svg>

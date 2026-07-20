@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1020" height="800" viewBox="0 0 1020 800" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5A6472"/>
+    </marker>
+    <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2A9D8F"/>
+    </marker>
+  </defs>
+
+  <text x="510" y="42" text-anchor="middle" font-size="22" font-weight="bold" fill="#1A1D23">One Transformer Block</text>
+  <text x="510" y="65" text-anchor="middle" font-size="13" fill="#5A6472">data flows down through two sub-layers; the residual highway carries the original straight past each one</text>
+
+  <!-- input x -->
+  <rect x="360" y="95" width="300" height="48" rx="11" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.6"/>
+  <text x="510" y="125" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1D23">x  (B, T, C)</text>
+
+  <!-- main arrow to LN1 -->
+  <line x1="510" y1="143" x2="510" y2="178" stroke="#5A6472" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- LN1 -->
+  <rect x="360" y="180" width="300" height="42" rx="10" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="510" y="207" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">LayerNorm</text>
+  <line x1="510" y1="222" x2="510" y2="246" stroke="#5A6472" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- MHA -->
+  <rect x="360" y="248" width="300" height="74" rx="10" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="510" y="278" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">Multi-Head Attention</text>
+  <text x="510" y="298" text-anchor="middle" font-size="11" fill="#5A6472">n_head heads in parallel,</text>
+  <text x="510" y="313" text-anchor="middle" font-size="11" fill="#5A6472">each C / n_head wide</text>
+  <line x1="510" y1="322" x2="510" y2="348" stroke="#5A6472" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- MHA inset: parallel heads -->
+  <g font-family="Helvetica, Arial, sans-serif">
+    <rect x="700" y="238" width="230" height="96" rx="10" fill="#FFFFFF" stroke="#5A6472" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <rect x="714" y="252" width="34" height="40" rx="5" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.2"/>
+    <rect x="754" y="252" width="34" height="40" rx="5" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.2"/>
+    <rect x="794" y="252" width="34" height="40" rx="5" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.2"/>
+    <rect x="834" y="252" width="34" height="40" rx="5" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.2"/>
+    <text x="791" y="277" text-anchor="middle" font-size="9.5" fill="#5A6472">head 1 ... head n</text>
+    <rect x="714" y="302" width="154" height="20" rx="5" fill="#FBEFD6" stroke="#E9A12E" stroke-width="1.2"/>
+    <text x="791" y="316" text-anchor="middle" font-size="10.5" font-weight="bold" fill="#9A6B00">concat</text>
+  </g>
+  <line x1="700" y1="286" x2="662" y2="286" stroke="#5A6472" stroke-width="1.2" stroke-dasharray="4 3"/>
+
+  <!-- output linear -->
+  <rect x="360" y="350" width="300" height="42" rx="10" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="510" y="377" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1D23">output linear (C -&gt; C)</text>
+  <line x1="510" y1="392" x2="510" y2="400" stroke="#5A6472" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- plus circle 1 -->
+  <circle cx="510" cy="432" r="30" fill="#FFFFFF" stroke="#2A9D8F" stroke-width="2"/>
+  <text x="510" y="443" text-anchor="middle" font-size="30" font-weight="bold" fill="#2A9D8F">+</text>
+  <text x="285" y="428" text-anchor="middle" font-size="12" font-family="Menlo, monospace" fill="#1A1D23">x = x + Attn(LN(x))</text>
+  <text x="285" y="446" text-anchor="middle" font-size="10.5" fill="#5A6472">(B, T, C)</text>
+
+  <!-- residual skip 1 -->
+  <path d="M660,119 C800,130 830,220 830,340 C830,410 700,432 542,432" fill="none" stroke="#2A9D8F" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowG)"/>
+  <text x="905" y="180" text-anchor="middle" font-size="11" font-weight="bold" fill="#2A9D8F">residual / skip</text>
+  <text x="905" y="196" text-anchor="middle" font-size="10.5" fill="#2A9D8F">keep original</text>
+
+  <!-- arrow to sublayer 2 -->
+  <line x1="510" y1="462" x2="510" y2="488" stroke="#5A6472" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- LN2 -->
+  <rect x="360" y="490" width="300" height="42" rx="10" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="510" y="517" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">LayerNorm</text>
+  <line x1="510" y1="532" x2="510" y2="556" stroke="#5A6472" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- FFN -->
+  <rect x="360" y="558" width="300" height="66" rx="10" fill="#EAF2F8" stroke="#2E86AB" stroke-width="1.6"/>
+  <text x="510" y="585" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#1A1D23">Feed-Forward / MLP</text>
+  <text x="510" y="606" text-anchor="middle" font-size="11" fill="#5A6472">Linear C-&gt;4C, GELU, Linear 4C-&gt;C</text>
+  <line x1="510" y1="624" x2="510" y2="634" stroke="#5A6472" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- plus circle 2 -->
+  <circle cx="510" cy="666" r="30" fill="#FFFFFF" stroke="#2A9D8F" stroke-width="2"/>
+  <text x="510" y="677" text-anchor="middle" font-size="30" font-weight="bold" fill="#2A9D8F">+</text>
+  <text x="285" y="662" text-anchor="middle" font-size="12" font-family="Menlo, monospace" fill="#1A1D23">x = x + FFN(LN(x))</text>
+  <text x="285" y="680" text-anchor="middle" font-size="10.5" fill="#5A6472">(B, T, C)</text>
+
+  <!-- residual skip 2 -->
+  <path d="M510,474 C730,474 830,520 830,600 C830,666 700,666 542,666" fill="none" stroke="#2A9D8F" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#arrowG)"/>
+
+  <!-- output -->
+  <line x1="510" y1="696" x2="510" y2="722" stroke="#5A6472" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <rect x="330" y="724" width="360" height="52" rx="11" fill="#F5F7F9" stroke="#5A6472" stroke-width="1.6"/>
+  <text x="510" y="756" text-anchor="middle" font-size="14" font-weight="bold" fill="#1A1D23">x  (B, T, C)  -&gt; next block</text>
+
+  <!-- shape-stays note -->
+  <text x="120" y="756" text-anchor="middle" font-size="10.5" fill="#5A6472">shape stays</text>
+  <text x="120" y="772" text-anchor="middle" font-size="10.5" fill="#5A6472">(B, T, C) throughout</text>
+</svg>
