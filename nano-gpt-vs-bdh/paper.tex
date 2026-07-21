@@ -21,12 +21,13 @@ The Dragon Hatchling (BDH) is a recent brain-inspired language-model
 architecture that replaces the Transformer's softmax attention and dense MLP
 with linear attention over a high-dimensional, positive, sparse neuron field
 \cite{kosowski2025bdh}. I reimplement both a GPT-2-style Transformer and BDH
-from scratch and train them identically on character-level TinyShakespeare. In a
-first, deliberately naive comparison the BDH model wins on every metric and
-sweeps a position-controlled Claude judge \JudgeBigScore{} over \NPrompts{}
-prompts ($p=\PvalBig$); but that BDH has \BdhBigParamsM{}M parameters against the
-Transformer's \GptParamsM{}M, so the result is confounded by size. This paper
-removes the confound. I shrink BDH's neuron multiplier so both models have
+from scratch and train them identically on character-level TinyShakespeare. At
+their natural sizes BDH carries roughly twice the Transformer's parameters
+(\BdhBigParamsM{}M vs \GptParamsM{}M) and wins every metric, sweeping a
+position-controlled Claude judge \JudgeBigScore{} over \NPrompts{} prompts
+($p=\PvalBig$); but a larger model almost always writes better, so that
+comparison is confounded by size. This paper controls for it. I shrink BDH's
+neuron multiplier so both models have
 matched parameter budgets (\GptParamsK{}K for GPT, \BdhParamsK{}K for BDH,
 matched within \MatchPct{}), retrain both from scratch under identical settings, and
 rerun the full harness: held-out perplexity over \NWindows{} windows, five
@@ -39,9 +40,9 @@ wins the head-to-head: perplexity \BdhPpl{} vs \GptPpl{}, real-word rate
 (\BdhPplBig{} to \BdhPpl{}), so it was heavily over-parameterized at 2$\times$ and
 lost almost nothing on the way down. On this task, at equal size, the win is
 architectural, not a size effect.
-The broader lesson is methodological: a two-times parameter gap was enough to
-manufacture a clean-looking \JudgeBigScore{} sweep with $p<10^{-8}$, and only a
-parameter-matched rerun separates architecture from size. All code, raw model
+The broader lesson is methodological: a two-times parameter gap alone can produce
+a clean-looking \JudgeBigScore{} sweep with $p<10^{-8}$, so only a
+parameter-matched comparison separates architecture from size. All code, raw model
 responses, judge verdicts, and the analysis pipeline that emits every number in
 this paper are released.
 \end{abstract}
@@ -66,15 +67,15 @@ from first principles (heavily commented, teaching-oriented code) and trained
 them under one shared harness on character-level TinyShakespeare, the standard
 minimal setting for studies of this kind \cite{karpathy2022nanogpt}.
 
-\paragraph{The trap.} My first comparison was unfair, and instructively so. Left
-at their natural teaching defaults, the BDH model had roughly twice the
-parameters of the Transformer (\BdhBigParamsM{}M vs \GptParamsM{}M). Under that
-setup BDH won on \emph{every} axis: lower perplexity, more real English words,
-and a \JudgeBigScore{} sweep of a position-controlled LLM judge with a binomial
-$p$-value of $\PvalBig$. Taken at face value this looks like a decisive
-architectural result. It is not: larger language models almost always write
-better, so the entire gap could be size rather than architecture. A reviewer
-would reject the claim on sight.
+\paragraph{Size versus architecture.} Comparing a new architecture against a
+Transformer is easy to get wrong. Left at their natural teaching defaults, the
+BDH model carries roughly twice the parameters of the Transformer
+(\BdhBigParamsM{}M vs \GptParamsM{}M), and at that size it leads on \emph{every}
+axis: lower perplexity, more real English words, and a \JudgeBigScore{} sweep of
+a position-controlled LLM judge with a binomial $p$-value of $\PvalBig$. But
+larger language models almost always write better, so a comparison at unequal
+sizes cannot separate architecture from scale; the size has to be held fixed
+before any of this counts as an architectural result.
 
 \paragraph{This paper.} I ask one question and answer it cleanly: \emph{does
 BDH's advantage survive parameter matching?} Because BDH's parameter count is
@@ -323,9 +324,9 @@ parameter-matched BDH (\BdhParamsK{}K) beats a GPT-2-style Transformer
 (\GptParamsK{}K) on every axis measured: lower perplexity (\BdhPpl{} vs
 \GptPpl{}), more real words (\BdhRealWord{} vs \GptRealWord{}), lower validation
 loss, and a \MatchScore{} sweep of a position-controlled judge ($p=\Pval$). The
-result is notable less for the win itself than for what the win survived: an
-earlier, naive comparison gave BDH a \JudgeBigScore{} sweep while it carried
-2$\times$ the parameters, a result that a size effect alone could fully explain.
+result is notable less for the win itself than for what it survives: at its
+natural 2$\times$ size BDH sweeps the judge \JudgeBigScore{}, a result that a
+size effect alone could fully explain.
 Only after equalizing parameters and retraining does the comparison isolate
 architecture from scale, and here the architecture holds up. The practical
 takeaway is small but sturdy: before crediting a new architecture for beating a
